@@ -114,7 +114,7 @@ public class FloorManager : ScriptableObject {
 
         //tile Colors
         colors.Add("floorForeColor", new Color(0.3f, 0.3f, 0.3f, 1f));
-        colors.Add("floorBackColor", new Color(0.2f, 0.2f, 0.1f, 1f));
+        colors.Add("floorBackColor", new Color(0.02f, 0.02f, 0.1f, 1f));
         colors.Add("wallForeColor", new Color(0.7f, 0.7f, 0.7f, 1f));
         colors.Add("wallBackColor", new Color(0.45f, 0.45f, 0.40f, 1f));
     }

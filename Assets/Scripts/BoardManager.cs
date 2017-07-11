@@ -12,7 +12,6 @@ public class BoardManager : MonoBehaviour
         public int minimum;             //Minimum value for our Count class.
         public int maximum;             //Maximum value for our Count class.
 
-
         //Assignment constructor.
         public Count(int min, int max)
         {
@@ -44,6 +43,10 @@ public class BoardManager : MonoBehaviour
     private Transform boardHolder;                                  //A variable to store a reference to the transform of our Board object.
     private List<Vector3> gridPositions = new List<Vector3>();   //A list of possible locations to place tiles.
 
+    public void draw(int x, int y, char c, Color fg, Color bg)
+    {
+
+    }
 
     //Clears our list gridPositions and prepares it to generate a new board.
     void InitialiseList()
@@ -79,17 +82,48 @@ public class BoardManager : MonoBehaviour
             for (int y = -1; y < rows + 1; y++)
             {
                 //Choose a random tile from our array of floor tile prefabs and prepare to instantiate it.
-                GameObject toInstantiate = floorTiles[Random.Range(0, floorTiles.Length)];
+                //GameObject toInstantiate = floorTiles[Random.Range(0, floorTiles.Length)];
+                GameObject floorInstantiate = new GameObject();
+                FloorTileType my_floor = floorManager.floorTileLibrary["default_ground"];
+                floorInstantiate.AddComponent<SpriteRenderer>();
+                SpriteRenderer sr1 = floorInstantiate.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
+                sr1.sprite = spriteScript.getSpriteFromChar(' ');
+                sr1.color = my_floor.backColor;
+                sr1.sortingLayerName = "Floor";
+
+                GameObject topInstantiate = new GameObject();
+                //topInstantiate.AddComponent<SpriteRenderer>();
+                //SpriteRenderer sr2 = topInstantiate.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
+                //sr2.sprite = spriteScript.getSpriteFromChar(my_floor.character);
+                //sr2.color = my_floor.foreColor;
+                //sr2.sortingLayerName = "Dungeon";
 
                 //Check if we current position is at board edge, if so choose a random outer wall prefab from our array of outer wall tiles.
                 if (x == -1 || x == columns || y == -1 || y == rows)
-                    toInstantiate = outerWallTiles[Random.Range(0, outerWallTiles.Length)];
-
+                {
+                    topInstantiate.AddComponent<SpriteRenderer>();
+                    SpriteRenderer sr2 = topInstantiate.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
+                    sr2.sprite = spriteScript.getSpriteFromChar('#');
+                    sr2.color = my_floor.foreColor;
+                    sr2.sortingLayerName = "Dungeon";
+                }
+                else
+                {
+                    topInstantiate.AddComponent<SpriteRenderer>();
+                    SpriteRenderer sr2 = topInstantiate.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
+                    sr2.sprite = spriteScript.getSpriteFromChar(my_floor.character);
+                    sr2.color = my_floor.foreColor;
+                    sr2.sortingLayerName = "Dungeon";
+                }
                 //Instantiate the GameObject instance using the prefab chosen for toInstantiate at the Vector3 corresponding to current grid position in loop, cast it to GameObject.
-                GameObject instance = Instantiate(toInstantiate, new Vector3(x*width, y*height, 0f), Quaternion.identity) as GameObject;
+                GameObject instance1 = Instantiate(topInstantiate, new Vector3(x*width, y*height, 0f), Quaternion.identity) as GameObject;
                 //floorGrid[x][y][0] = toInstantiate;
                 //Set the parent of our newly instantiated object instance to boardHolder, this is just organizational to avoid cluttering hierarchy.
-                instance.transform.SetParent(boardHolder);
+                instance1.transform.SetParent(boardHolder);
+                GameObject instance2 = Instantiate(floorInstantiate, new Vector3(x * width, y * height, 0f), Quaternion.identity) as GameObject;
+                //floorGrid[x][y][0] = toInstantiate;
+                //Set the parent of our newly instantiated object instance to boardHolder, this is just organizational to avoid cluttering hierarchy.
+                instance2.transform.SetParent(boardHolder);
             }
         }
     }
@@ -145,11 +179,8 @@ public class BoardManager : MonoBehaviour
         InitialiseList();
 
         GameObject myWall = new GameObject();
-        print("here1");
         FloorTileType my_wall = floorManager.floorTileLibrary["default_wall"];
-        print("here2");
         Sprite s = spriteScript.getSpriteFromChar(my_wall.character);
-        print(s);
         myWall.AddComponent<SpriteRenderer>().sprite = s;
         SpriteRenderer sr = myWall.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
         sr.color = my_wall.backColor;

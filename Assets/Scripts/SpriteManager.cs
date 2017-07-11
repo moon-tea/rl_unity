@@ -22,9 +22,17 @@ public class SpriteManager : MonoBehaviour {
 
     public Sprite getSpriteFromChar(char c)
     {
-        if(c == '#')
+        if(c == ' ')
+        {
+            return sprites[0];
+        }
+        else if (c == '#')
         {
             return sprites[3];
+        }
+        else if ( c == '.')
+        {
+            return sprites[14];
         }
         else
         {
